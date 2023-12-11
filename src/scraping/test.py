@@ -52,7 +52,6 @@ with requests.Session() as session:
     # df = pd.DataFrame(mapping)
     # df.set_index('CRN', inplace=True)
     # df.to_csv('../../raw_data/TEMP1')
-    print(mapping)
     print(is_available(mapping, ['19743']))
 
 
