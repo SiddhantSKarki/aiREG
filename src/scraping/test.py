@@ -79,7 +79,7 @@ def send_mail(sender, receiver, classes):
     server.sendmail(from_addr=sender, to_addrs=receiver, msg=msg)
     server.quit()
 
-def send_mail(sender, receiver, subject, other):
+def send_mail_err(sender, receiver, subject, other):
     # sender += "@miamioh.edu"
     # receiver += "@miamioh.edu"
     msg = f"Subject:{subject}\r\nFrom:{sender}\r\nTo:{receiver}\r\n{other}"
@@ -91,11 +91,10 @@ def send_mail(sender, receiver, subject, other):
 
 if __name__ == '__main__':
     try:
-        raise Exception ("ERROR")
-        intervals = 5
+        intervals = 60
         stat , sec, classes = run(intervals)
         if stat:
             send_mail("karkiss@miamioh.edu", "karkiss@miamioh.edu", classes)
             print(f"Class Found after {intervals * sec} seconds later")
     except Exception as e:
-        send_mail("karkiss@miamioh.edu", 'karkiss@miamioh.edu', "ERROR - WATCH", f"ERROR HAS OCCURED IN the watch:\n{e.__cause__}")
+        send_mail_err("karkiss@miamioh.edu", 'karkiss@miamioh.edu', "ERROR - WATCH", f"ERROR HAS OCCURED IN the watch:\n{e.__cause__}")
