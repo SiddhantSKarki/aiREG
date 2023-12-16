@@ -4,7 +4,6 @@ import pandas as pd
 import time
 import os
 import smtplib
-# import telnetlib
 
 def is_available(mapping, excep = []):
     available = []
@@ -57,9 +56,9 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
 url = 'https://www.apps.miamioh.edu/courselist/'
-excep = ['19740']
+excep = ['1974']
 
-# print(is_available(scraped_dict,excep))
+
 def run(interval_sec = 5):
     i = 0
     scraped_dict = scrape(url, form_data, headers)
@@ -70,7 +69,6 @@ def run(interval_sec = 5):
         scraped_dict = scrape(url, form_data, headers)
         i+=1
     return True, i, is_available(scraped_dict,excep)[1]
-# print(is_available(scraped_dict,excep)
 
 def send_mail(sender, receiver, classes):
     msg = f"Subject:CLASS FOUND\r\nFrom:{sender}\r\nTo:{receiver}\r\nClasses found are: \n"
@@ -81,18 +79,23 @@ def send_mail(sender, receiver, classes):
     server.sendmail(from_addr=sender, to_addrs=receiver, msg=msg)
     server.quit()
 
+def send_mail(sender, receiver, subject, other):
+    # sender += "@miamioh.edu"
+    # receiver += "@miamioh.edu"
+    msg = f"Subject:{subject}\r\nFrom:{sender}\r\nTo:{receiver}\r\n{other}"
+    server = smtplib.SMTP(host='mailfwd.miamioh.edu', port=25)
+    server.set_debuglevel(1)
+    server.sendmail(from_addr=sender, to_addrs=receiver, msg=msg)
+    server.quit()
+
+
 if __name__ == '__main__':
-    intervals = 43
-    stat , sec, classes = run(intervals)
-    if stat:
-        send_mail("karkiss@miamioh.edu", "karkiss@miamioh.edu", classes)
-        print(f"Class Found after {intervals * sec} seconds later")
-
-
-  
-
-
-
-
-
-
+    try:
+        raise Exception ("ERROR")
+        intervals = 5
+        stat , sec, classes = run(intervals)
+        if stat:
+            send_mail("karkiss@miamioh.edu", "karkiss@miamioh.edu", classes)
+            print(f"Class Found after {intervals * sec} seconds later")
+    except Exception as e:
+        send_mail("karkiss@miamioh.edu", 'karkiss@miamioh.edu', "ERROR - WATCH", f"ERROR HAS OCCURED IN the watch:\n{e.__cause__}")
